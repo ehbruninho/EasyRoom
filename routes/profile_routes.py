@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from Controllers.profile_controllers import ProfileController
+from Controllers.profile_controllers import ProfileController, Profile
 from flask_login import login_required, current_user
 
 profile_bp = Blueprint('profile', __name__, template_folder='templates')
@@ -13,7 +13,7 @@ def create_profile():
         phone = request.form.get('phone')
         image = request.files.get('image')
 
-        response = ProfileController.create_profile_ct(name, cpf, phone, image)
+        response = ProfileController.create_profile_ct(name, cpf, phone, image,current_user.id)
 
         if "error" in response:
             flash(response["error"], "danger")
@@ -27,5 +27,5 @@ def create_profile():
 @profile_bp.route('/view', methods=['GET'])
 @login_required
 def view_profile():
-    profile = Profile.view_profile(current_user.id)
+    profile = ProfileController.get_profile(current_user.id)
     return render_template('view_profile.html', profile=profile)
