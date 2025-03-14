@@ -1,4 +1,5 @@
 from Models.base import Base, engine
+from Models.profile import Profile
 
 def create_db():
     Base.metadata.create_all(engine)

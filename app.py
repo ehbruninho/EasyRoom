@@ -1,18 +1,26 @@
 from flask import Flask
-from Controllers.users_controllers import create_user
-from Models.base import Base, engine  # Importando a base e o engine para criar o banco
+from Models.base import Base, engine
+from routes.user_routes import user_bp
+from routes.profile_routes import profile_bp
+from Models.users import User
+from flask_login import LoginManager
 
 app = Flask(__name__)
+app.secret_key = '!@#Nova!@#'
 
-# Criando as tabelas antes de rodar a aplicação
-Base.metadata.create_all(engine)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'user.login'
+@login_manager.user_loader
+def load_user(user_id):
+    return User.find_by_id(user_id)
+app.register_blueprint(user_bp, url_prefix='/user')
+app.register_blueprint(profile_bp, url_prefix='/profile')
 
 @app.route('/')
 def hello_world():
-    created = create_user("ssss", "ssss@gmail.com", "12345")
-    if created:
-        return 'Usuário cadastrado com sucesso!'
-    return 'Usuário já existe ou erro ao cadastrar!'
+    return 'Hello World!'
 
 if __name__ == '__main__':
+    Base.metadata.create_all(engine)
     app.run()

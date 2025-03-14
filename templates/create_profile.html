@@ -1,0 +1,38 @@
+
+{% block title %}Meu Perfil{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">Meu Perfil</h2>
+    <hr>
+
+    {% if profile %}
+        <div class="card p-4 shadow-sm">
+            <div class="row">
+                <div class="col-md-4 text-center">
+                    {% if profile.image %}
+                        <img src="{{ url_for('static', filename='uploads/' + profile.image) }}" 
+                             alt="Foto de {{ profile.name }}" 
+                             class="img-fluid rounded-circle" 
+                             style="width: 150px; height: 150px; object-fit: cover;">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='img/default-profile.png') }}" 
+                             alt="Foto padrão" 
+                             class="img-fluid rounded-circle" 
+                             style="width: 150px; height: 150px; object-fit: cover;">
+                    {% endif %}
+                </div>
+                <div class="col-md-8">
+                    <h4>{{ profile.name }}</h4>
+                    <p><strong>CPF:</strong> {{ profile.cpf }}</p>
+                    <p><strong>Telefone:</strong> {{ profile.phone }}</p>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-warning text-center">
+            Você ainda não criou um perfil. <a href="{{ url_for('profile.create_profile') }}">Clique aqui</a> para criar.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

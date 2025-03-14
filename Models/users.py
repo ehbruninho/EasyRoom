@@ -36,21 +36,23 @@ class User(Base, UserMixin):
             user = session.query(User).filter_by(email=email).first()
             return user is not None
         except Exception as e:
+            session.rollback()
             print(f"Erro ao validar Usuario! Erro {e}")
             return False
         finally:
             session.close()
 
     @classmethod
-    def login_user(cls,email, password):
+    def login(cls,email, password):
         session = create_session()
         try:
-            user = session.query(cls).filter(cls.email==email).first()
-            if user and check_password_hash(user.password, password):
-                return True
+            user = session.query(User).filter(User.email==email).first()
+            if user and check_password_hash(user.password,password):
+                return user
         except Exception as e:
-            print("Erro ao cadastrar Usuario!")
-            return False
+            session.rollback()
+            print(f"Erro ao autenticar Usuario!{e}")
+            return None
         finally:
             session.close()
 
@@ -62,16 +64,17 @@ class User(Base, UserMixin):
             session.commit()
             return True
         except Exception as e:
+            session.rollback()
             print(f"Erro ao atualizar Usuario! Erro {e}")
             return False
 
         finally:
             session.close()
 
-    def find_by_id(cls,email):
+    def find_by_id(id):
         session = create_session()
         try:
-            user = session.query(cls).filter_by(email=email).first()
+            user = session.query(User).get(int(id))
             return user
         except Exception as e:
             print(f"Erro ao obter Usuario! Erro {e}")
