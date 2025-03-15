@@ -5,21 +5,19 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(Base, UserMixin):
     __tablename__ = 'users'
-    id = Column(Integer, primary_key=True)
-    username = Column(String(50), nullable=False)
+    id = Column(Integer, primary_key=True,autoincrement=True,nullable=False)
     email = Column(String(50), unique=True, nullable=False)
     password = Column(String(50), nullable=False)
 
-    def __init__(self, username, email, password):
-        self.username = username
+    def __init__(self, email, password):
         self.email = email
         self.password = generate_password_hash(password)
 
     @classmethod
-    def create_user(cls,name, email, password):
+    def create_user(cls,email, password):
         session = create_session()
         try:
-            user = cls(name, email, password)
+            user = cls(email, password)
             session.add(user)
             session.commit()
             return True

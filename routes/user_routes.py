@@ -8,7 +8,6 @@ user_bp = Blueprint('user', __name__, template_folder='templates')
 def register():
     if request.method == 'POST':
         response = UserController.register_user(
-            request.form.get('name'),
             request.form.get('email'),
             request.form.get('password')
         )

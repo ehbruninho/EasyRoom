@@ -3,8 +3,8 @@ from flask_login import login_user, logout_user
 
 class UserController:
     @staticmethod
-    def register_user(name, email, password):
-        if not all([name, email, password]):
+    def register_user(email, password):
+        if not all([email, password]):
             return {"error": "Todos os campos são obrigatórios!"}
 
         if len(password) < 8:
@@ -14,7 +14,7 @@ class UserController:
         if exist_user:
             return {"error": "Usuário já existe."}
 
-        user = User.create_user(name, email, password)
+        user = User.create_user(email, password)
         if user:
             return {"success": "Usuário cadastrado com sucesso!"}
         return {"error": "Erro ao cadastrar usuário!"}

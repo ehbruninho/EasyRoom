@@ -4,7 +4,7 @@ from Models.base import Base, SessionLocal, create_session
 
 class Profile(Base):
     __tablename__ = 'profiles'
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True,autoincrement=True)
     name = Column(String(100), nullable=False)
     cpf = Column(String(11),unique=True, nullable=False)
     phone = Column(String(15), nullable=False)
