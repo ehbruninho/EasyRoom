@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from Controllers.users_controllers import UserController
 from flask_login import login_required
+from routes.main_routes import menu
 
 user_bp = Blueprint('user', __name__, template_folder='templates')
 
@@ -34,7 +35,7 @@ def login():
             return redirect(url_for('user.login'))
 
         flash(response["success"], "success")
-        return redirect(url_for('dashboard'))  # Altere para a rota desejada
+        return redirect(url_for('main.menu'))  # Altere para a rota desejada
 
     return render_template('login.html')
 

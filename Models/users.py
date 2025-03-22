@@ -9,6 +9,7 @@ class User(Base, UserMixin):
     email = Column(String(50), unique=True, nullable=False)
     password = Column(String(50), nullable=False)
 
+
     def __init__(self, email, password):
         self.email = email
         self.password = generate_password_hash(password)
