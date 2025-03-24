@@ -25,5 +25,9 @@ class Preco(Base):
             session.close()
 
 
-
+    @classmethod
+    def view_price (cls,plan_id):
+        session = SessionLocal()
+        price = session.query(Preco.price).filter_by(plan_id=plan_id).first()
+        return price[0]
 

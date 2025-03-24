@@ -21,3 +21,12 @@ class PlanesController:
     @staticmethod
     def view_plans_byId(id):
         return Planos.findPlans_by_Id(id)
+
+    @staticmethod
+    def get_PlansName_by_Id(plan_id):
+        return Planos.findPlansName_by_Id(plan_id)
+
+    @staticmethod
+    def get_TotalTime_by_Id(plan_id):
+        return Planos.findTotalTime_by_Id(plan_id)
+

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Float, Enum, ForeignKey, String, Date
+from sqlalchemy import Column, Integer, Float, Enum, ForeignKey, String, DATETIME
 from Models.base import Base, SessionLocal
 
 class Pagamento(Base):
@@ -11,7 +11,7 @@ class Pagamento(Base):
     states = Column(Enum("Pendente","Aprovado","Recusado"), nullable=False)
     pay_met = Column(Enum("Pix","Boleto","Cartao"), nullable=False)
     transition_id = Column(String(255), nullable=False)
-    date_payed = Column(Date, nullable=False)
+    date_payed = Column(DATETIME, nullable=False)
 
     def __init__(self, user_id, reserve_id, plan_id, amount_paid, states, pay_met, date_payed,transition_id):
         self.user_id = user_id
@@ -38,3 +38,9 @@ class Pagamento(Base):
 
         finally:
             session.close()
+
+    @classmethod
+    def view_payment_by_user_id(cls, user_id):
+        session = SessionLocal()
+        payment = session.query(Pagamento).filter_by(user_id=user_id).first()
+        return payment

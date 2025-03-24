@@ -30,6 +30,11 @@
                         <form method="POST" action="{{ url_for('reserves.create_reserves') }}">
 
                             <div class="mb-3">
+                                <label for="date_init" class="form-label">Data/Hora da Reserva</label>
+                                <input type="datetime-local" class="form-control" id="date_init" name="date_init" required>
+                            </div>
+
+                            <div class="mb-3">
                                 <label for="room_id" class="form-label">Sala</label>
                                 <select class="form-control" id="room_id" name="room_id" required>
                                     <option value="" disabled selected>Selecione uma sala</option>
@@ -37,11 +42,6 @@
                                         <option value="{{ room.id }}">{{ room.name }} - Capacidade: {{ room.capacity }}</option>
                                     {% endfor %}
                                 </select>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="date_init" class="form-label">Data e Hora de Início</label>
-                                <input type="datetime-local" class="form-control" id="date_init" name="date_init" required>
                             </div>
 
                             <div class="mb-3">
@@ -63,7 +63,6 @@
 
                             <button type="submit" class="btn btn-primary w-100">Reservar</button>
                         </form>
-
                         <div class="text-center mt-3">
                             <small><a href="{{ url_for('reserves.view_reserves') }}">Ver Minhas Reservas</a></small>
                         </div>
@@ -75,6 +74,7 @@
     </div>
 
   <script src="{{ url_for('static', filename='js/calc_duration.js') }}"></script>
+<script src="{{ url_for('static', filename='js/filter_rooms.js') }}"></script>
 
 </body>
 </html>

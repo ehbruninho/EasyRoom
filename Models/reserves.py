@@ -1,8 +1,7 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DATETIME, Enum
+from sqlalchemy import Column, Integer, String, ForeignKey, DATETIME, Enum, and_
 from sqlalchemy.orm import relationship, joinedload
 from Models.base import Base, SessionLocal
-from Models.rooms import Salas
-from Models.plans import Planos
+from datetime import timedelta
 
 
 class Reservas(Base):
@@ -32,7 +31,7 @@ class Reservas(Base):
             reserves = Reservas(user_id,room_id,date_init,date_end,plan_id)
             session.add(reserves)
             session.commit()
-            return reserves
+            return reserves.id
         except Exception as e:
             session.rollback()
             print(f"Erro ao registrar reserva! Error: {e}")
@@ -47,5 +46,36 @@ class Reservas(Base):
             return reserves
         except Exception as e:
             print(f"Erro ao realizar consulta! Error: {e}")
+        finally:
+            session.close()
+
+    @classmethod
+    def findReserves_by_Date(cls, room_id,date_init, date_end):
+        session = SessionLocal()
+        try:
+            reserves = session.query(Reservas).filter(Reservas.room_id == room_id, Reservas.states == "Pago",
+            and_(
+                Reservas.date_init < date_end,
+                Reservas.date_end > date_init
+            )
+        ).first()
+            return reserves
+        except Exception as e:
+            print(f"Erro ao realizar consulta! Error: {e}")
+        finally:
+            session.close()
+
+    @classmethod
+    def findReserves_by_date_range(cls,date_init):
+        session = SessionLocal()
+        try:
+                reserves = session.query(Reservas).filter(Reservas.states == "Pago",
+                                                          Reservas.date_init <= date_init + timedelta(hours=4),
+                                                          Reservas.date_end >= date_init - timedelta(hours=4)).all()
+                return reserves # Retornará somente id das salas com status de pago
+        except Exception as e:
+                print(f"Erro ao realizar consulta! Error: {e}")
+                return []
+
         finally:
             session.close()

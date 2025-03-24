@@ -45,7 +45,18 @@ class Planos(Base):
         return plan
 
     @classmethod
+    def findPlansName_by_Id(cls, id):
+        session = SessionLocal()
+        plan = session.query(Planos.name).filter_by(id=id).first()
+        return plan
+    @classmethod
     def compare_plans(cls, name, total_time, duration):
         session = SessionLocal()
         plans = session.query(Planos).filter(Planos.name == name, Planos.total_time == total_time, Planos.duration == duration).all()
         return plans
+
+    @classmethod
+    def findTotalTime_by_Id(cls, plan_id):
+        session = SessionLocal()
+        duration = session.query(Planos.duration).filter(Planos.id==plan_id).first()
+        return duration[0]
