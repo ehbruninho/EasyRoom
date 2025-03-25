@@ -79,3 +79,25 @@ class Reservas(Base):
 
         finally:
             session.close()
+
+    @classmethod
+    def update_reserve(cls, reserve_id):
+        session = SessionLocal()
+        update = session.query(Reservas).filter_by(id=reserve_id).first()
+        if update:
+            update.states = "Pago"
+            session.commit()
+            return True
+        else:
+            return False
+
+    @classmethod
+    def find_reserve_by_ReserveId(cls, reserve_id):
+        session = SessionLocal()
+        reserves = session.query(Reservas).options(joinedload(Reservas.room), joinedload(Reservas.plan)).filter_by(id=reserve_id)
+        if reserves:
+            return reserves
+        else:
+            return None
+
+

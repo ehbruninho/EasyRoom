@@ -28,5 +28,10 @@ class ReservasController:
         return Reservas.findReserves_by_date_range(date_init)
 
 
+    @staticmethod
+    def att_reserves(reserve_id):
+        return Reservas.update_reserve(reserve_id)
 
-
+    @staticmethod
+    def get_reserve_by_id(reserve_id):
+        return Reservas.find_reserve_by_ReserveId(reserve_id)

@@ -17,7 +17,7 @@ class PaymentController:
                 {"id": "reserve_id",  "quantity": 1, "currency_id": "BRL", "unit_price": amount_paid ,"description": f"Reserva com plano {plan_id}"}
             ],
             "back_urls": {
-                "success": "http://127.0.0.1:5000/compracerta",
+                "success": "http://127.0.0.1:5000/approved/reserve_approved",
                 "failure": "http://127.0.0.1:5000/compraerrada",
                 "pending": "http://127.0.0.1:5000/compraerrada",
             },
@@ -41,3 +41,11 @@ class PaymentController:
 
 
         return {"error": "Erro ao criar pagamento no Mercado Pago"}
+
+    @staticmethod
+    def get_by_Transition_id(preference_id):
+        return Pagamento.find_Transition_id(preference_id)
+
+    @staticmethod
+    def att_payment(payment_status, payment_id, payment_type, preference_id):
+        return Pagamento.update_payment(payment_status, payment_id, payment_type, preference_id)

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento Aprovado - EasyRoom</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-lg">
+                    <div class="card-header text-center bg-success text-white">
+                        <h4>Pagamento Aprovado</h4>
+                    </div>
+                    <div class="card-body text-center">
+                        {% for reserve in reserves %}
+                        <p class="lead">Seu pagamento foi processado com sucesso.</p>
+                        <p><strong>Sala:</strong> {{ reserve.room.name }}</p>
+                        <p><strong>Data Agendada:</strong>  {{ reserve.date_init.strftime('%d/%m/%Y %H:%M') }}</p>
+                        <p><strong>Status:</strong> {{ reserve.states }}</p>
+                         {% endfor %}
+                        <p class="text-muted">Você será redirecionado para suas reservas em instantes...</p>
+                        <a href="{{ url_for('reserves.view_reserves') }}" class="btn btn-primary">Ir para Minhas Reservas Agora</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/redirect.js') }}"></script>
+</body>
+</html>
