@@ -4,8 +4,6 @@ from Controllers.reserves_controllers import ReservasController
 from Controllers.rooms_controllers import RoomController
 from Controllers.plans_controllers import PlanesController
 from Controllers.payment_controllers import PaymentController
-
-from Models.plans import Planos
 from datetime import datetime, timedelta
 
 reserves_bp = Blueprint('reserves', __name__, template_folder='templates')

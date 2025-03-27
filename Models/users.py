@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Enum
 from Models.base import Base, create_session
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -8,17 +8,21 @@ class User(Base, UserMixin):
     id = Column(Integer, primary_key=True,autoincrement=True,nullable=False)
     email = Column(String(50), unique=True, nullable=False)
     password = Column(String(50), nullable=False)
+    user_role = Column (Enum('user','admin'), nullable=False, default='user')
+    token = Column(String(50), unique=True, nullable=False)
 
 
-    def __init__(self, email, password):
+    def __init__(self, email, password,token):
         self.email = email
         self.password = generate_password_hash(password)
+        self.user_role = 'user'
+        self.token = token
 
     @classmethod
-    def create_user(cls,email, password):
+    def create_user(cls,email, password, token):
         session = create_session()
         try:
-            user = cls(email, password)
+            user = cls(email, password,token)
             session.add(user)
             session.commit()
             return True

@@ -1,5 +1,8 @@
+import random
+
 from Models.users import User
 from flask_login import login_user, logout_user
+import random
 
 class UserController:
     @staticmethod
@@ -14,7 +17,8 @@ class UserController:
         if exist_user:
             return {"error": "Usuário já existe."}
 
-        user = User.create_user(email, password)
+        token = random.randint(10000000,99999999)
+        user = User.create_user(email, password,token)
         if user:
             return {"success": "Usuário cadastrado com sucesso!"}
         return {"error": "Erro ao cadastrar usuário!"}

@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from Models.base import Base, engine
 from routes.user_routes import user_bp
 from routes.profile_routes import profile_bp
@@ -27,8 +27,8 @@ app.register_blueprint(approved_reserves_bp, url_prefix='/approved')
 
 
 @app.route('/')
-def hello_world():
-    return 'Hello World!'
+def init_app():
+    return render_template('login.html')
 
 if __name__ == '__main__':
     Base.metadata.create_all(engine)

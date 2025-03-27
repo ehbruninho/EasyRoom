@@ -14,14 +14,18 @@ class PaymentController:
         payment_data = {
 
             "items": [
-                {"id": "reserve_id",  "quantity": 1, "currency_id": "BRL", "unit_price": amount_paid ,"description": f"Reserva com plano {plan_id}"}
+                {"id": "reserve_id", "title": "Reserva de sala - Sopro", "quantity": 1, "currency_id": "BRL", "unit_price": amount_paid ,"description": f"Reserva com plano {plan_id}"}
             ],
             "back_urls": {
                 "success": "http://127.0.0.1:5000/approved/reserve_approved",
                 "failure": "http://127.0.0.1:5000/compraerrada",
                 "pending": "http://127.0.0.1:5000/compraerrada",
             },
-            "auto_return": "all"
+            "auto_return": "all",
+            "payment_methods": {
+                "installments": 1,
+                "default_installments": 1,
+            },
         }
 
         result = sdk.preference().create(payment_data)
@@ -35,10 +39,7 @@ class PaymentController:
                 user_id, reserve_id, plan_id, amount_paid, "Pendente", "Pix", date_att, result["response"]["id"]
             )
 
-
             return {"payment_url": payment_url}
-
-
 
         return {"error": "Erro ao criar pagamento no Mercado Pago"}
 
