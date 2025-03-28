@@ -28,7 +28,7 @@ class UserController:
         user = User.login(email, password)
         if user:
             login_user(user)
-            return {"success": "Login realizado com sucesso!"}
+            return {"success": "Login realizado com sucesso!", 'user_role': user.user_role}
         return {"error": "Usuário ou senha incorretos!"}
 
     @staticmethod

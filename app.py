@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, flash, redirect, url_for
 from Models.base import Base, engine
 from routes.user_routes import user_bp
 from routes.profile_routes import profile_bp
@@ -8,7 +8,8 @@ from routes.main_routes import main_bp
 from routes.rooms_routes import rooms_bp
 from routes.reserves_routes import reserves_bp
 from routes.reserve_approved_routes import approved_reserves_bp
-
+from routes.admin_routes import admin_bp
+from Controllers.users_controllers import UserController
 app = Flask(__name__)
 app.secret_key = '!@#Nova!@#'
 
@@ -24,11 +25,18 @@ app.register_blueprint(main_bp, url_prefix='/main')
 app.register_blueprint(rooms_bp, url_prefix='/room')
 app.register_blueprint(reserves_bp, url_prefix='/reserves')
 app.register_blueprint(approved_reserves_bp, url_prefix='/approved')
+app.register_blueprint(admin_bp, url_prefix='/admin')
 
 
 @app.route('/')
 def init_app():
     return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    response = UserController.logout_user()
+    flash(response["success"], "success")
+    return redirect(url_for('user.login'))
 
 if __name__ == '__main__':
     Base.metadata.create_all(engine)

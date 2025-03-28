@@ -9,23 +9,80 @@
 </head>
 <body class="bg-light">
 
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">EasyRoom</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('profile.view_profile') }}">Meu Perfil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('reserves.view_reserves') }}">Minhas Reservas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('rooms_bp.view_rooms') }}">Ver Salas</a></li>
+                    <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('user.logout') }}">Sair</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
     <div class="container mt-5">
+        <h2 class="text-center">Bem-vindo ao EasyRoom!</h2>
+        <p class="text-center">Escolha uma das opções abaixo para navegar no sistema.</p>
+
         <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card shadow-lg">
-                    <div class="card-header text-center bg-primary text-white">
-                        <h4>Menu Principal</h4>
+            <div class="col-md-4">
+                <div class="card shadow text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Meu Perfil</h5>
+                        <p class="card-text">Gerencie seus dados de usuário.</p>
+                        <a href="{{ url_for('profile.view_profile') }}" class="btn btn-primary w-100">Acessar</a>
                     </div>
-                    <div class="card-body text-center">
+                </div>
+            </div>
 
-                        <a href="{{ url_for('profile.view_profile') }}" class="btn btn-outline-primary w-100 mb-3">Meu Perfil</a>
-                        <a href="{{ url_for('reserves.create_reserves') }}" class="btn btn-outline-success w-100 mb-3">Reservar Sala</a>
-                        <a href="{{ url_for('reserves.view_reserves') }}" class="btn btn-outline-warning w-100 mb-3">Minhas reservas</a>
-                        <a href="{{ url_for('rooms_bp.view_rooms') }}" class="btn btn-outline-info w-100 mb-3">Ver Salas</a>
+            <div class="col-md-4">
+                <div class="card shadow text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Reservar Sala</h5>
+                        <p class="card-text">Agende uma sala de reunião.</p>
+                        <a href="{{ url_for('reserves.create_reserves') }}" class="btn btn-primary w-100">Acessar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                        <hr>
-                        <a href="{{ url_for('user.logout') }}" class="btn btn-danger w-100">Sair</a>
+        <div class="row justify-content-center mt-3">
+            <div class="col-md-4">
+                <div class="card shadow text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Minhas Reservas</h5>
+                        <p class="card-text">Veja e gerencie suas reservas ativas.</p>
+                        <a href="{{ url_for('reserves.view_reserves') }}" class="btn btn-primary w-100">Acessar</a>
+                    </div>
+                </div>
+            </div>
 
+            <div class="col-md-4">
+                <div class="card shadow text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Ver Salas</h5>
+                        <p class="card-text">Consulte salas disponíveis.</p>
+                        <a href="{{ url_for('rooms_bp.view_rooms') }}" class="btn btn-primary w-100">Acessar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-4">
+                <div class="card shadow text-center border-danger">
+                    <div class="card-body">
+                        <h5 class="card-title text-danger">Sair</h5>
+                        <p class="card-text">Encerre sua sessão com segurança.</p>
+                        <a href="{{ url_for('user.logout') }}" class="btn btn-danger w-100">Logout</a>
                     </div>
                 </div>
             </div>

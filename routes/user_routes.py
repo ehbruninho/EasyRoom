@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 from Controllers.users_controllers import UserController
 from flask_login import login_required
 from routes.main_routes import menu
@@ -34,7 +34,14 @@ def login():
             flash(response["error"], "danger")
             return redirect(url_for('user.login'))
 
+
+        session['user_role'] = response["user_role"]
         flash(response["success"], "success")
+
+
+        if session['user_role'] == "admin":
+            return redirect(url_for('admin.admin_dashboard'))
+
         return redirect(url_for('main.menu'))  # Altere para a rota desejada
 
     return render_template('login.html')
