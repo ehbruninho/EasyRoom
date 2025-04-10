@@ -21,7 +21,8 @@ class ProfileController:
 
     @staticmethod
     def get_profile(user_id):
-        return Profile.find_by_user_id(user_id)
+        return Profile.find_profile_by_User_id(user_id)
+
     @staticmethod
     def get_profile(user_id):
         profile = Profile.view_profile(user_id)
@@ -33,3 +34,11 @@ class ProfileController:
             else:
                 profile.image = None
         return profile
+
+    @staticmethod
+    def get_profile_by_User_id(user_id):
+        return Profile.find_profile_by_User_id(user_id)
+
+    @staticmethod
+    def get_all_profiles():
+        return Profile.view_all_profiles()

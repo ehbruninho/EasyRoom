@@ -11,11 +11,13 @@ class Reservas(Base):
     room_id = Column(Integer, ForeignKey('rooms.id'),nullable=False)
     date_init = Column(DATETIME, nullable=False)
     date_end = Column(DATETIME, nullable=False)
-    states = Column(Enum("Pendente","Pago","Cancelado"),default="Pendente",nullable=False)
+    states = Column(Enum("Pendente","Confirmada","Cancelada"),default="Pendente",nullable=False)
     plan_id = Column(Integer, ForeignKey('plans.id'), nullable=False)
 
-    room = relationship("Salas", backref="reserves")
+    room = relationship("Salas",  backref="reserves")
     plan = relationship("Planos", backref="reserves")
+    payment = relationship("Pagamento", backref="reserves", overlaps="reserves")
+
 
     def __init__(self, user_id, room_id, date_init, date_end,plan_id):
         self.user_id = user_id
@@ -74,30 +76,102 @@ class Reservas(Base):
                                                           Reservas.date_end >= date_init - timedelta(hours=4)).all()
                 return reserves # Retornará somente id das salas com status de pago
         except Exception as e:
-                print(f"Erro ao realizar consulta! Error: {e}")
-                return []
+            session.rollback()
+            print(f"Erro ao realizar consulta! Error: {e}")
+            return []
 
         finally:
             session.close()
 
     @classmethod
-    def update_reserve(cls, reserve_id):
+    def update_payment_reserve(cls, reserve_id):
         session = SessionLocal()
-        update = session.query(Reservas).filter_by(id=reserve_id).first()
-        if update:
-            update.states = "Pago"
-            session.commit()
-            return True
-        else:
+        try:
+            update = session.query(Reservas).filter_by(id=reserve_id).first()
+            if update:
+                update.states = "Pago"
+                session.commit()
+                return True
+            else:
+                return False
+        except Exception as e:
+            session.rollback()
+            print(f'Erro ao atualizar reserva: {e}')
             return False
+        finally:
+            session.close()
 
     @classmethod
     def find_reserve_by_ReserveId(cls, reserve_id):
         session = SessionLocal()
-        reserves = session.query(Reservas).options(joinedload(Reservas.room), joinedload(Reservas.plan)).filter_by(id=reserve_id)
-        if reserves:
-            return reserves
-        else:
+        try:
+            reserves = (
+                session.query(Reservas)
+                .options(
+                    joinedload(Reservas.room),
+                    joinedload(Reservas.plan)
+                )
+                .filter_by(id=reserve_id)
+                .all()
+            )
+            return reserves if reserves else None
+        except Exception as e:
+            session.rollback()
+            print(f'Erro ao listar reservas: {e}')
             return None
+        finally:
+            session.close()
 
+    @classmethod
+    def update_reserve(cls,reserve_id, date_init, date_end, room_id, plan_id, states):
+        session = SessionLocal()
+        try:
+            update = session.query(Reservas).filter_by(id=reserve_id).first()
+            if update:
+                update.room_id = room_id
+                update.date_init = date_init
+                update.date_end = date_end
+                update.states = states
+                update.plan_id = plan_id
+                session.commit()
+                return True
+            else:
+                return None
 
+        except Exception as e:
+            session.rollback()
+            print(f'Erro ao atualizar reserva: {e}')
+            return False
+        finally:
+            session.close()
+            
+
+    @classmethod
+    def delete_reserve(cls, reserve_id):
+        session = SessionLocal()
+        try:
+            delete = session.query(Reservas).filter_by(id=reserve_id).first()
+            if delete:
+                session.delete(delete)
+                session.commit()
+                return True
+            else:
+                return False
+        except Exception as e:
+            session.rollback()
+            print(f'Erro ao deletar reserva: {e}')
+        finally:
+            session.close()
+
+    @classmethod
+    def view_all_reserves(cls):
+        session = SessionLocal()
+        try:
+            reserves = session.query(Reservas).options(joinedload(Reservas.room), joinedload(Reservas.plan)).all()
+            return reserves
+        except Exception as e:
+            session.rollback()
+            print(f'Erro ao listar reservas: {e}')
+            return None
+        finally:
+            session.close()

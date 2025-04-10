@@ -1,5 +1,6 @@
 from sqlalchemy import Float, Integer, Column, String, ForeignKey
 from Models.base import Base, SessionLocal
+from sqlalchemy.orm import relationship
 
 class Preco(Base):
     __tablename__ = 'price'
@@ -10,6 +11,9 @@ class Preco(Base):
     def __init__(self, price, plan_id):
         self.price = price
         self.plan_id = plan_id
+
+    plans = relationship("Planos", backref="price")
+
     @classmethod
     def create_price(cls,price,plan_id):
         session = SessionLocal()
@@ -28,6 +32,11 @@ class Preco(Base):
     @classmethod
     def view_price (cls,plan_id):
         session = SessionLocal()
-        price = session.query(Preco.price).filter_by(plan_id=plan_id).first()
-        return price[0]
-
+        try:
+            price = session.query(Preco.price).filter_by(plan_id=plan_id).first()
+            return price[0]
+        except Exception as e:
+            session.rollback()
+            print(f"Erro ao listar preços! Error: {e}")
+        finally:
+            session.close()

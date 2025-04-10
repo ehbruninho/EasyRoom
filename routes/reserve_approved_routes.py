@@ -29,7 +29,7 @@ def reserve_approved():
         return jsonify({'error': 'Erro ao atualizar pagamento.'}), 400
 
     # Depois de atualizar tabela de pagamento hora de atualizar a tabela reservas
-    update_reserves = ReservasController.att_reserves(update)
+    update_reserves = ReservasController.att_payments_reserves(update)
 
     #Criado objeto para enviar informações da reserva para o html
     check_reserve = ReservasController.get_reserve_by_id(update)

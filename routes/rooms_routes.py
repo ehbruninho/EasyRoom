@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from Controllers.rooms_controllers import RoomController, Salas
 from flask_login import login_required, current_user
 
+from helpers.auth import admin_required
+
 rooms_bp = Blueprint('rooms_bp', __name__, template_folder='templates')
 
 @rooms_bp.route('/create_room', methods=['GET', 'POST'])
@@ -33,4 +35,4 @@ def view_rooms():
     salas = RoomController.get_rooms_images()
     return render_template('view_rooms.html', salas=salas)
 
-#name,description,capacity,disp,type,local,foto
+

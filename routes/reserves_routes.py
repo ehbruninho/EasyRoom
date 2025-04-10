@@ -45,8 +45,7 @@ def create_reserves():
 
             # Criar pagamento via Mercado Pago
             reserves_id = new_reserve[1]
-            payment_data = PaymentController.create_payment(current_user.id, reserves_id, plan_id)
-
+            payment_data = PaymentController.make_payment(current_user.id, reserves_id, plan_id)
 
             if payment_data.get("payment_url"):
                 return redirect(payment_data["payment_url"])  # Redireciona para a página de pagamento do Mercado Pago

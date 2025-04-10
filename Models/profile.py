@@ -41,6 +41,34 @@ class Profile(Base):
             profile = session.query(Profile).filter_by(user_id=user_id).first()
             return profile
         except Exception as e:
+            session.rollback()
             print(f"Erro ao listar perfil! Erro: {e}")
             return None
+        finally:
+            session.close()
 
+    @classmethod
+    def find_profile_by_User_id(cls, user_id):
+        session = create_session()
+        try:
+            profile = session.query(Profile).filter_by(user_id=user_id).first()
+            return profile
+        except Exception as e:
+            session.rollback()
+            print(f"Erro ao listar perfil! Erro: {e}")
+            return None
+        finally:
+            session.close()
+
+    @classmethod
+    def view_all_profiles(cls):
+        session = create_session()
+        try:
+            profile = session.query(Profile).all()
+            return profile
+        except Exception as e:
+            session.rollback()
+            print(f"Erro ao listar perfil! Erro: {e}")
+            return None
+        finally:
+            session.close()

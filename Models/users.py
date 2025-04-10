@@ -80,6 +80,7 @@ class User(Base, UserMixin):
             user = session.query(User).get(int(id))
             return user
         except Exception as e:
+            session.rollback()
             print(f"Erro ao obter Usuario! Erro {e}")
             return False
         finally:
