@@ -8,6 +8,9 @@ from Controllers.plans_controllers import PlanesController
 from datetime import datetime, timedelta
 from Controllers.profile_controllers import ProfileController
 from Controllers.price_controllers import PriceController
+from werkzeug.utils import secure_filename
+import os
+
 
 
 admin_bp = Blueprint('admin', __name__, template_folder='templates')
@@ -110,5 +113,43 @@ def delete_reserve():
     reserve = ReservasController.delete_reserve(reserve_id)
     return redirect(url_for('admin.view_reserves'))
 
+@admin_bp.route("/edit_rooms", methods=['GET', 'POST'])
+@admin_required
+def edit_rooms():
+    if request.method == 'POST':
+        room_id = request.form.get('room_id')
+    else:
+        room_id = request.args.get('room_id')
 
+    images = RoomController.get_images_room_by_id(room_id)
+    rooms = RoomController.get_rooms_by_id(room_id) or []
+
+    if request.method == 'POST':
+        try:
+            description = request.form.get('description')
+            capacity = request.form.get('capacity')
+            status_disp = request.form.get('disp') =='1'
+            type = request.form.get('type')
+            foto = request.files.get('foto')
+            local = request.form.get('local')
+
+            update = RoomController.att_room(room_id,description, capacity, status_disp, type, local, foto)
+            for updates in update:
+                print(updates)
+            if update:
+                flash("Sala atualizada com sucesso!", "success")
+                return redirect(url_for('admin.view_rooms'))
+
+        except Exception as e:
+            print(f"Erro ao atualizar sala: {e}")
+            return redirect(url_for('admin.view_rooms'))
+
+
+    return render_template("edit_room.html", rooms=rooms, images=images)
+
+@admin_bp.route("/delete_rooms", methods=['POST'])
+@admin_required
+def delete_rooms():
+    RoomController.remove_room(request.form.get('room_id'))
+    return redirect(url_for('admin.view_rooms'))
 

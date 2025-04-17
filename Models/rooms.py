@@ -47,7 +47,7 @@ class Salas(Base):
     def view_room(cls):
         session = SessionLocal()
         try:
-            rooms = session.query(cls).all()
+            rooms = session.query(Salas).filter_by(disp=True).all()
             return rooms
         except Exception as e:
             session.rollback()
@@ -55,3 +55,51 @@ class Salas(Base):
             return []
         finally:
             session.close()
+    @classmethod
+    def view_room_by_id(cls, room_id):
+        session = SessionLocal()
+        try:
+            room = session.query(Salas).filter_by(id = room_id).first()
+            return room
+        except Exception as e:
+            session.rollback()
+            print(f"Erro ao buscar a sala! Error: {e}")
+            return None
+        finally:
+            session.close()
+
+    @classmethod
+    def remove_room(cls, room_id):
+        session = SessionLocal()
+        try:
+            session.query(cls).filter(cls.id == room_id).delete()
+            session.commit()
+            return True
+        except Exception as e:
+            session.rollback()
+            print(f"Erro ao remover a sala! Error: {e}")
+            return False
+        finally:
+            session.close()
+
+    @classmethod
+    def update_room(cls, room_id, description, capacity, disp, type, local, foto):
+        session = SessionLocal()
+        try:
+            room = session.query(Salas).filter_by(id = room_id).first()
+            if room:
+                room.description = description
+                room.capacity = capacity
+                room.disp = disp
+                room.type = type
+                room.local = local
+                room.foto = foto
+                session.commit()
+                return True
+        except Exception as e:
+            session.rollback()
+            print(f"Erro ao atualizar a sala! Error: {e}")
+            return False
+        finally:
+            session.close()
+
